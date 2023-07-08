@@ -63,6 +63,7 @@ const getUsers = (req, res) => {
   .query("SELECT * FROM users")
   .then(([users]) => {
       res.json(users);
+      res.status(200);
   })
   .catch((err) => {
       console.log(err);
@@ -78,7 +79,8 @@ const getUsers = (req, res) => {
       .query('SELECT * FROM users WHERE ID = ?', [id])
       .then(([users]) => {
           if (users[0] != null) {
-          res.json(users[0]);  
+          res.json(users[0]); 
+          res.status(200); 
       }else{
           res.status(404).send("Not Found")
       }
