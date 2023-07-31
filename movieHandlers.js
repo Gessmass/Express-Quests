@@ -58,46 +58,30 @@ const getMovieById = (req, res) => {
 };
 
 
-const getUsers = (req, res) => {
-  database
-  .query("SELECT * FROM users")
-  .then(([users]) => {
-      res.json(users);
-      res.status(200);
-  })
-  .catch((err) => {
-      console.log(err);
-      res.status(500).send("Error retreiving data from database");
-  });
-  };
+
+
+  const postMovie = (req, res) => {
+    const { title, director, year, color, duration } = req.body;
   
-  
-  const getUsersById = (req, res) => {
-      const id =  parseInt(req.params.id);
-  
-      database
-      .query('SELECT * FROM users WHERE ID = ?', [id])
-      .then(([users]) => {
-          if (users[0] != null) {
-          res.json(users[0]); 
-          res.status(200); 
-      }else{
-          res.status(404).send("Not Found")
-      }
+    database
+      .query(
+        "INSERT INTO movies(title, director, year, color, duration) VALUES (?, ?, ?, ?, ?)",
+        [title, director, year, color, duration]
+      )
+      .then(([result]) => {
+        res.location(`/api/movies/${result.insertId}`).sendStatus(201);
       })
       .catch((err) => {
-      console.log(err);
-      res.status(500).send('Error retreiving data from database');
+        console.error(err);
+        res.status(500).send("Error saving the movie");
       });
-  
-  }
+  };
 
 
 module.exports = {
   getMovies,
   getMovieById,
-  getUsers,
-  getUsersById,
+  postMovie,
 };
 
 
