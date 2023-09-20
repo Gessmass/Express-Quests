@@ -48,12 +48,12 @@ const getUsers = (req, res) => {
     }
 
     const postUser = (req, res) => {
-        const { firstname, lastname, email, city, language, hashedPassword } = req.body;
+        const { firstname, lastname, email, city, language, hashedPassword, password } = req.body;
       
         database
           .query(
-            "INSERT INTO users (firstname, lastname, email, city, language, hashedPassword) VALUES (?, ?, ?, ?, ?, ?)",
-            [firstname, lastname, email, city, language, hashedPassword]
+            "INSERT INTO users (firstname, lastname, email, city, language, hashedPassword, password) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [firstname, lastname, email, city, language, hashedPassword, password]
           )
           .then(([result]) => {
             res.location(`/api/users/${result.insertId}`).sendStatus(201);
@@ -101,6 +101,27 @@ const getUsers = (req, res) => {
             res.status(500).send("Error deleting the movie")
           });
       };
+
+const getUserByEmailWithPasswordAndPassToNext = (req, res, next) => {
+  const {email} = req.body;
+
+  database
+    .query("SELECT * FROM users WHERE email = ?",
+          [email])
+    .then(([result]) => {
+    if (result[0] != null) {
+      req.user = result[0];
+
+      next();
+    } else {
+    res.status(401).send("Not Found")
+    }
+  }).catch((err) => {
+    console.error(err)
+    res.status(500).send("Error retrieving data from DB")
+  })
+}
+     
     
 
 
@@ -110,4 +131,5 @@ module.exports = {
      postUser,
      updateUser,
      deleteUser,
+     getUserByEmailWithPasswordAndPassToNext
   };

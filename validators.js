@@ -9,16 +9,16 @@ const validateMovie = (req, res, next) => {
         errors.push({ filed: "title", message: "This field is required"});
     }  
     if (director == null) {
-        errors.push({ filed: "title", message: "This field is required"});
+        errors.push({ filed: "director", message: "This field is required"});
     }
     if (year == null) {
-        errors.push({ filed: "title", message: "This field is required"});
+        errors.push({ filed: "year", message: "This field is required"});
     }
     if (color == null) {
-        errors.push({ filed: "title", message: "This field is required"});
+        errors.push({ filed: "color", message: "This field is required"});
     }
     if (duration == null) {
-        errors.push({ filed: "title", message: "This field is required"});
+        errors.push({ filed: "duration", message: "This field is required"});
     }
 
     if (errors.length) {
